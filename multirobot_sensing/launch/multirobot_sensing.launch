@@ -1,0 +1,10 @@
+<launch>
+
+<node name="multirobot_sensing_node" pkg="multirobot_sensing" type="multirobot_sensing.py" output="screen">
+  <remap from="~/r1/odom" to="/r1/ground_truth/odom"/>
+  <remap from="~/r2/odom" to="/r2/ground_truth/odom"/>
+  <remap from="~/r1/pc" to="/r1/os1_cloud_node/points"/>
+  <remap from="~/r2/pc" to="/r2/os1_cloud_node/points"/>
+</node>
+
+</launch>
