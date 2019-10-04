@@ -2,8 +2,7 @@
 
 import rospy
 from nav_msgs.msg import Odometry
-from tf2_geometry_msgs import PointStamped
-from geometry_msgs.msg import TransformStamped, Point
+from geometry_msgs.msg import TransformStamped, PointStamped, Point
 from sensor_msgs.msg import PointCloud2
 from visualization_msgs.msg import Marker
 import tf2_ros
@@ -92,7 +91,6 @@ class MultirobotSensing:
                 rel_pos.point.x = Trel[0, 3]
                 rel_pos.point.y = Trel[1, 3]
                 rel_pos.point.z = Trel[2, 3]
-                rel_pos = self.tf_buffer_.transform(rel_pos, "r"+str(robot+1)+"/base_link")
                 self.rel_pos_pubs_[robot].publish(rel_pos)
             else:
                 good_ray = False
