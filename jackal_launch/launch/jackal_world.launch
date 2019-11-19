@@ -36,6 +36,9 @@
     <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" output="screen"
     	        args="-urdf -model jackal1 -param robot_description -x 0 -y 0 -z 1.0" />
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="publish_odom_tf" pkg="multirobot_sensing" type="publish_odom_tf.py">
+      <param name="ns" value="r1"/>
+    </node>
   </group>
 
   <group ns="r2">
@@ -50,6 +53,9 @@
     <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" output="screen"
     	        args="-urdf -model jackal2 -param robot_description -x 3 -y 0 -z 1.0" />
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="publish_odom_tf" pkg="multirobot_sensing" type="publish_odom_tf.py">
+      <param name="ns" value="r2"/>
+    </node>
   </group>
 
   <include file="$(find multirobot_sensing)/launch/multirobot_sensing.launch" />

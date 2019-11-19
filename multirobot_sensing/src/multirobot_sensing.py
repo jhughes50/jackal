@@ -16,12 +16,7 @@ NODE_NAME = 'multirobot_sensing_node'
 
 class MultirobotSensing:
     def __init__(self):
-        self.odom_subs_ = []
         self.pc_subs_ = []
-        self.odom_subs_.append(rospy.Subscriber(os.path.join(NODE_NAME, 'r1/odom'), 
-                                                Odometry, lambda odom : self.odom_cb(0, odom)))
-        self.odom_subs_.append(rospy.Subscriber(os.path.join(NODE_NAME, 'r2/odom'), 
-                                                Odometry, lambda odom : self.odom_cb(1, odom)))
         self.pc_subs_.append(rospy.Subscriber(os.path.join(NODE_NAME, 'r1/pc'),
                                               PointCloud2, lambda pc : self.pc_cb(0, pc)))
         self.pc_subs_.append(rospy.Subscriber(os.path.join(NODE_NAME, 'r2/pc'),
@@ -39,19 +34,6 @@ class MultirobotSensing:
         #tf stuff
         self.tf_buffer_ = tf2_ros.Buffer()
         self.tf_listener_ = tf2_ros.TransformListener(self.tf_buffer_)
-
-    def odom_cb(self, robot, odom):
-        br = tf2_ros.TransformBroadcaster()
-        t = TransformStamped()
-        t.header.stamp = odom.header.stamp
-        t.header.frame_id = "map"
-        t.child_frame_id = "r"+str(robot+1)+"/base_link"
-        t.transform.translation.x = odom.pose.pose.position.x
-        t.transform.translation.y = odom.pose.pose.position.y
-        t.transform.translation.z = odom.pose.pose.position.z
-        t.transform.rotation = odom.pose.pose.orientation
-
-        br.sendTransform(t)
 
     def pc_cb(self, robot, pc):
         pc_np = ros_numpy.point_cloud2.pointcloud2_to_array(pc).reshape([1024, 64]) #64x1024 matrix
