@@ -27,6 +27,7 @@
 
         <remap from="odom" to="$(arg odom_topic)"/>
         <remap from="scan" to="$(arg pointcloud_topic)"/>
+        <remap from="cmd_vel" to="jackal_velocity_controller/cmd_vel"/>
     </node>
 
     <node pkg="octomap_server" type="octomap_server_node" name="octomap_server">
