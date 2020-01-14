@@ -32,6 +32,9 @@
       <arg name="config" value="$(arg config)" />
       <arg name="ns" value="r1" />
     </include>
+    <include file="$(find jackal_launch)/launch/jackal_navigation.launch">
+      <arg name="ns" value="r1"/>
+    </include>
     <include file="$(find jackal_control)/launch/control.launch" />
     <!-- Spawn Jackal -->
     <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" output="screen"
@@ -50,6 +53,9 @@
     </include>
     <param name="tf_prefix" value="r2"/>
     <include file="$(find jackal_control)/launch/control.launch" />
+    <!--include file="$(find jackal_launch)/launch/jackal_navigation.launch"-->
+      <!--arg name="ns" value="r1"/-->
+    <!--/include-->
     <!-- Spawn Jackal -->
     <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" output="screen"
     	        args="-urdf -model jackal2 -param robot_description -x 3 -y 0 -z 5.0" />

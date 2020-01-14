@@ -1,0 +1,9 @@
+<launch>
+    <node name="joy" pkg="joy" type="joy_node">
+        <param name="dev" value="/dev/input/js0"/>
+    </node>
+
+    <node name="jackal_teleop" pkg="jackal_teleop" type="jackal_teleop.py">
+        <remap from="twist_out" to="/jackal_velocity_controller/cmd_vel"/>
+    </node>
+</launch>
