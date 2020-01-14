@@ -42,4 +42,6 @@
         <remap from="~output" to="os1_cloud_node/points/origin_filtered" />
     </node>
 
+    <node pkg="tf2_ros" type="static_transform_publisher" name="odom_pub" args="0 0 0 0 0 0 $(arg ns)/odom map"/>
+
 </launch>
