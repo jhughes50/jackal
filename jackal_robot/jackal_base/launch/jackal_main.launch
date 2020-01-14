@@ -7,10 +7,17 @@
     <!-- Static transform between map and odom: Hack for now.. Needs to use transform given by loam -->
     <node pkg="tf2_ros" type="static_transform_publisher" name="link1_broadcaster" args="0 0 0 0 0 0 1 map odom" />
 
+    <!-- Static transform between odom and robot/local_mapper frame and from local_pose to base_link frame to include Anthony's mapper -->
+    <node pkg="tf2_ros" type="static_transform_publisher" name="odom_mapper_broadcaster" args="0 0 0 0 0 0 1 odom robot/map_local_mapper" />
+    <node pkg="tf2_ros" type="static_transform_publisher" name="odom_mapper_broadcaster" args="0 0 0 0 0 0 1 local_pose base_link" />
+
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 
     <!-- Launch LeGO-LOAM -->
-    <include file="$(find lego_loam)/launch/run.launch" />
+    <!--include file="$(find lego_loam)/launch/run.launch" /-->
+
+    <!--Launch Anthony's Mapper -->
+    <include file="$(find depth_atlas)/launch/surveying_single.launch" />
 
     <!-- Launch Octomap server -->
     <node pkg="octomap_server" type="octomap_server_node" name="octomap_server">
