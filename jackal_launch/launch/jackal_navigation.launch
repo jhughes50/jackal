@@ -36,7 +36,7 @@
         <param name="filter_ground" value="true" />
         <param name="sensor_model/max_range" value="5.0" />
         <param name="occupancy_min_z" value="0.1" />
-        <remap from="cloud_in" to="/r1/os1_cloud_node/points" />
+        <remap from="cloud_in" to="/r1/os1_cloud_node/points/origin_filtered" />
         <remap from="projected_map" to="/r1/map" />
     </node>
 
