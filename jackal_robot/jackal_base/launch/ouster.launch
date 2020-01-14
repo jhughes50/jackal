@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <group ns="r1">
+        <include file="$(find ouster_ros)/os1.launch" />
+    </group>
+</launch>
+
