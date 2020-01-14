@@ -29,6 +29,17 @@
         <remap from="scan" to="$(arg pointcloud_topic)"/>
     </node>
 
+    <node pkg="octomap_server" type="octomap_server_node" name="octomap_server">
+        <param name="resolution" value="0.05" />
+        <param name="frame_id" type="string" value="map" />
+        <param name="base_frame_id" value="r1/base_link" />
+        <param name="filter_ground" value="true" />
+        <param name="sensor_model/max_range" value="5.0" />
+        <param name="occupancy_min_z" value="0.1" />
+        <remap from="cloud_in" to="/r1/os1_cloud_node/points/origin_filtered" />
+        <remap from="projected_map" to="/r1/map" />
+    </node>
+
     <node pkg="nodelet" type="nodelet" name="pcl_manager" args="manager" output="screen" />
 
     <node pkg="nodelet" type="nodelet" name="passthrough" args="load pcl/PassThrough pcl_manager" output="screen">
