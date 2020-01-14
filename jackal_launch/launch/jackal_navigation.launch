@@ -28,4 +28,18 @@
         <remap from="odom" to="$(arg odom_topic)"/>
         <remap from="scan" to="$(arg pointcloud_topic)"/>
     </node>
+
+    <node pkg="nodelet" type="nodelet" name="pcl_manager" args="manager" output="screen" />
+
+    <node pkg="nodelet" type="nodelet" name="passthrough" args="load pcl/PassThrough pcl_manager" output="screen">
+        <remap from="~input" to="os1_cloud_node/points" />
+        <rosparam>
+            filter_field_name: x
+            filter_limit_min: -0.001
+            filter_limit_max: 0.001
+            filter_limit_negative: True
+        </rosparam>
+        <remap from="~output" to="os1_cloud_node/points/origin_filtered" />
+    </node>
+
 </launch>
