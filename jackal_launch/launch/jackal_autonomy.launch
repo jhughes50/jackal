@@ -8,22 +8,22 @@
     <node pkg="tf2_ros" type="static_transform_publisher" name="link1_broadcaster" args="0 0 0 0 0 0 1 map odom" />
 
     <!-- Static transform between odom and robot/local_mapper frame and from local_pose to base_link frame to include Anthony's mapper -->
-    <node pkg="tf2_ros" type="static_transform_publisher" name="odom_mapper_broadcaster" args="0 0 0 0 0 0 1 odom robot/map_local_mapper" />
-    <node pkg="tf2_ros" type="static_transform_publisher" name="odom_mapper_broadcaster" args="0 0 0 0 0 0 1 local_pose base_link" />
-
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <!--node pkg="tf2_ros" type="static_transform_publisher" name="odom_mapper_broadcaster" args="0 0 0 0 0 0 1 odom robot/map_local_mapper" />
+    <node pkg="tf2_ros" type="static_transform_publisher" name="odom_mapper_broadcaster" args="0 0 0 0 0 0 1 local_pose base_link" /-->
 
     <!-- Launch LeGO-LOAM -->
-    <!--include file="$(find lego_loam)/launch/run.launch" /-->
+    <include file="$(find lego_loam)/launch/run.launch" >
+      <arg name="use_sim_time" value="False" />
+    </include>
 
     <!--Launch Anthony's Mapper -->
-    <include file="$(find depth_atlas)/launch/surveying_single.launch" />
+    <!--include file="$(find depth_atlas)/launch/surveying_single.launch" /-->
 
     <!-- Launch Octomap server -->
-    <node pkg="octomap_server" type="octomap_server_node" name="octomap_server">
+    <node pkg="octomap_server" type="octomap_server_node" name="octomap_server" output="screen">
         <param name="resolution" value="0.05" />
         <param name="frame_id" value="map"/>
-        <param name="base_frame_id" value="base_link" />
+        <param name="base_frame_id" value="base_link"/>
         <param name="filter_ground" value="true" />
         <param name="sensor_model/max_range" value="5.0" />
         <param name="occupancy_min_z" value="0.1" />
@@ -44,12 +44,4 @@
         </rosparam>
         <remap from="~output" to="os1_cloud_node/points/origin_filtered" />
     </node>
-
-    <!-- Ouster Launch -->
-    <node pkg="tf2_ros" type="static_transform_publisher" name="ouster_tf_broadcaster" args="0 0 0 0 0 1 0 chassis_link ouster/os1_sensor" />
-    
-    <include file="$(find ouster_ros)/os1.launch">
-        <arg name="tf_prefix" value="ouster" />
-    </include>
-
 </launch>
