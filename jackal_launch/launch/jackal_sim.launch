@@ -32,7 +32,7 @@
       <arg name="config" value="$(arg config)" />
       <arg name="ns" value="r1" />
     </include>
-    <include file="$(find jackal_launch)/launch/jackal_navigation.launch">
+    <include file="$(find jackal_launch)/launch/jackal_navigation_sim.launch">
       <arg name="ns" value="r1"/>
     </include>
     <include file="$(find jackal_control)/launch/control.launch" />
@@ -53,7 +53,7 @@
     </include>
     <param name="tf_prefix" value="r2"/>
     <include file="$(find jackal_control)/launch/control.launch" />
-    <!--include file="$(find jackal_launch)/launch/jackal_navigation.launch"-->
+    <!--include file="$(find jackal_launch)/launch/jackal_navigation_sim.launch"-->
       <!--arg name="ns" value="r1"/-->
     <!--/include-->
     <!-- Spawn Jackal -->

@@ -29,4 +29,31 @@
         <remap from="scan" to="$(arg pointcloud_topic)"/>
         <remap from="cmd_vel" to="jackal_velocity_controller/cmd_vel"/>
     </node>
+
+    <node pkg="octomap_server" type="octomap_server_node" name="octomap_server">
+        <param name="resolution" value="0.05" />
+        <param name="frame_id" type="string" value="map" />
+        <param name="base_frame_id" value="r1/base_link" />
+        <param name="filter_ground" value="true" />
+        <param name="sensor_model/max_range" value="5.0" />
+        <param name="occupancy_min_z" value="0.1" />
+        <remap from="cloud_in" to="/r1/os1_cloud_node/points/origin_filtered" />
+        <remap from="projected_map" to="/r1/map" />
+    </node>
+
+    <node pkg="nodelet" type="nodelet" name="pcl_manager" args="manager" output="screen" />
+
+    <node pkg="nodelet" type="nodelet" name="passthrough" args="load pcl/PassThrough pcl_manager" output="screen">
+        <remap from="~input" to="os1_cloud_node/points" />
+        <rosparam>
+            filter_field_name: x
+            filter_limit_min: -0.001
+            filter_limit_max: 0.001
+            filter_limit_negative: True
+        </rosparam>
+        <remap from="~output" to="os1_cloud_node/points/origin_filtered" />
+    </node>
+
+    <node pkg="tf2_ros" type="static_transform_publisher" name="odom_pub" args="0 0 0 0 0 0 $(arg ns)/odom map"/>
+
 </launch>
