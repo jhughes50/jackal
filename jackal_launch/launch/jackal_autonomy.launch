@@ -31,40 +31,8 @@
   -->
 
   <!--Launch Anthony's Mapper -->
-  <group if="$(eval arg('upslam'))" ns="upslam">
-    <remap from="depth_image" to="os1_node/image"/>
-    <remap from="imu/data_raw" to="/os1_cloud_node/imu"/>
-    <remap from="imu_raw" to="/os1_cloud_node/imu"/>
-    <remap from="lidar_points" to="/os1_cloud_node/points"/>
-    <remap from="semantic_pano" to="/lidar_rgb_calib/semantic_pano"/>
-
-    <include file="$(find depth_atlas)/depth_atlas.launch">
-
-      <arg name="constant_velocity_guess" value="True"/>
-      <arg name="keyframe_point_filtering" value="2"/>
-      <arg name="lidar_width" value="1024"/>
-      <!-- <arg name="keyframe_width" value="1024"/> -->
-      <!-- <arg name="keyframe_height" value="256"/> -->
-      <arg name="keyframe_width" value="2048"/>
-      <arg name="keyframe_height" value="512"/>
-
-      <!-- <arg name="keyframe_inlier_ratio" value="0.5"/> -->
-      <arg name="keyframe_inlier_ratio" value="0.6"/>
-      <arg name="loop_inlier_ratio" value="0.775"/>
-      
-      <!-- <arg name="publish_global_cloud" value="true"/> -->
-      <!-- <arg name="publish_corrected_cloud" value="true"/> -->
-
-      <!-- Image resolution scaling on published keyframe depth panoramas -->
-      <arg name="image_scaling" value="0.25"/>
-
-      <arg name="verbosity" value="1"/>
-    </include>
-    <include file="$(find depth_atlas)/launch/mapper_base_station.launch">
-      <arg name="point_cloud_period"  value="8"/>
-      <!-- <arg name="pano_points_max_depth"  value="40.0"/> -->
-      <arg name="pano_points_max_depth"  value="100.0"/>
-    </include>
+  <group if="$(eval arg('upslam'))">
+    <include file="$(find depth_atlas)/launch/mapper.launch"/>
   </group>
 
   <!-- Launch Octomap server -->
