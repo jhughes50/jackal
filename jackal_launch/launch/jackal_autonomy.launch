@@ -1,96 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-    <arg name="upslam" default="False"/>
-    <arg name="loam" default="False"/>
+  <arg name="upslam" default="False"/>
+  <arg name="loam" default="False"/>
 
-    <!-- Launch the ROS navigation stack -->
-    <include file="$(find jackal_navigation)/launch/jackal_navigation.launch" />
+  <!-- Launch the ROS navigation stack -->
+  <include file="$(find jackal_navigation)/launch/jackal_navigation.launch" />
 
-    <node pkg="tf2_ros" type="static_transform_publisher" name="link1_broadcaster" args="0 0 0 0 0 0 map odom" />
+  <node pkg="tf2_ros" type="static_transform_publisher" name="link1_broadcaster" args="0 0 0 0 0 0 map odom" />
 
-    <!-- Static transform between odom and robot/local_mapper frame and from local_pose to base_link frame to include Anthony's mapper -->
-    <!--node pkg="tf2_ros" type="static_transform_publisher" name="odom_mapper_broadcaster" args="0 0 0 0 0 0 1 odom robot/map_local_mapper" />
-    <node pkg="tf2_ros" type="static_transform_publisher" name="odom_mapper_broadcaster" args="0 0 0 0 0 0 1 local_pose base_link" /-->
+  <!-- Static transform between odom and robot/local_mapper frame and from local_pose to base_link frame to include Anthony's mapper -->
+  <!--node pkg="tf2_ros" type="static_transform_publisher" name="odom_mapper_broadcaster" args="0 0 0 0 0 0 1 odom robot/map_local_mapper" />
+  <node pkg="tf2_ros" type="static_transform_publisher" name="odom_mapper_broadcaster" args="0 0 0 0 0 0 1 local_pose base_link" /-->
 
-    <!-- Launch LeGO-LOAM -->
-    <group if="$(eval arg('loam'))">
-      <include file="$(find lego_loam)/launch/run.launch" >
-        <arg name="use_sim_time" value="False" />
-      </include>
-    </group>
+  <!-- Launch LeGO-LOAM -->
+  <group if="$(eval arg('loam'))">
+    <include file="$(find lego_loam)/launch/run.launch" >
+      <arg name="use_sim_time" value="False" />
+    </include>
+  </group>
 
-    <!-- Connect upslam to robot tf tree -->
-    <!-- If upslam isn't running, doesn't hurt -->
+  <!-- Connect upslam to robot tf tree -->
+  <!-- If upslam isn't running, doesn't hurt -->
+  <group if="$(eval not arg('loam'))">
     <node pkg="tf2_ros" type="static_transform_publisher" name="connect_upslam_tf" args="0 0 0 3.14159 0 0 local_pose base_link" />
+  </group>
 
-    <!-- Dummy transform for testing -->
-    <!--
-    <node pkg="tf2_ros" type="static_transform_publisher" name="dummy_upslam" args="200 200 0 0 0 0 map local_pose" />
-    -->
+  <!-- Dummy transform for testing -->
+  <!--
+  <node pkg="tf2_ros" type="static_transform_publisher" name="dummy_upslam" args="200 200 0 0 0 0 map local_pose" />
+  -->
 
-    <!--Launch Anthony's Mapper -->
-    <group if="$(eval arg('upslam'))" ns="upslam">
-      <remap from="depth_image" to="os1_node/image"/>
-      <remap from="imu/data_raw" to="/os1_cloud_node/imu"/>
-      <remap from="imu_raw" to="/os1_cloud_node/imu"/>
-      <remap from="lidar_points" to="/os1_cloud_node/points"/>
-      <remap from="semantic_pano" to="/lidar_rgb_calib/semantic_pano"/>
+  <!--Launch Anthony's Mapper -->
+  <group if="$(eval arg('upslam'))" ns="upslam">
+    <remap from="depth_image" to="os1_node/image"/>
+    <remap from="imu/data_raw" to="/os1_cloud_node/imu"/>
+    <remap from="imu_raw" to="/os1_cloud_node/imu"/>
+    <remap from="lidar_points" to="/os1_cloud_node/points"/>
+    <remap from="semantic_pano" to="/lidar_rgb_calib/semantic_pano"/>
 
-      <include file="$(find depth_atlas)/depth_atlas.launch">
+    <include file="$(find depth_atlas)/depth_atlas.launch">
 
-        <arg name="constant_velocity_guess" value="True"/>
-        <arg name="keyframe_point_filtering" value="2"/>
-        <arg name="lidar_width" value="1024"/>
-        <!-- <arg name="keyframe_width" value="1024"/> -->
-        <!-- <arg name="keyframe_height" value="256"/> -->
-        <arg name="keyframe_width" value="2048"/>
-        <arg name="keyframe_height" value="512"/>
+      <arg name="constant_velocity_guess" value="True"/>
+      <arg name="keyframe_point_filtering" value="2"/>
+      <arg name="lidar_width" value="1024"/>
+      <!-- <arg name="keyframe_width" value="1024"/> -->
+      <!-- <arg name="keyframe_height" value="256"/> -->
+      <arg name="keyframe_width" value="2048"/>
+      <arg name="keyframe_height" value="512"/>
 
-        <!-- <arg name="keyframe_inlier_ratio" value="0.5"/> -->
-        <arg name="keyframe_inlier_ratio" value="0.6"/>
-        <arg name="loop_inlier_ratio" value="0.775"/>
-        
-        <!-- <arg name="publish_global_cloud" value="true"/> -->
-        <!-- <arg name="publish_corrected_cloud" value="true"/> -->
+      <!-- <arg name="keyframe_inlier_ratio" value="0.5"/> -->
+      <arg name="keyframe_inlier_ratio" value="0.6"/>
+      <arg name="loop_inlier_ratio" value="0.775"/>
+      
+      <!-- <arg name="publish_global_cloud" value="true"/> -->
+      <!-- <arg name="publish_corrected_cloud" value="true"/> -->
 
-        <!-- Image resolution scaling on published keyframe depth panoramas -->
-        <arg name="image_scaling" value="0.125"/>
+      <!-- Image resolution scaling on published keyframe depth panoramas -->
+      <arg name="image_scaling" value="0.25"/>
 
-        <arg name="verbosity" value="1"/>
-      </include>
-      <include file="$(find depth_atlas)/launch/mapper_base_station.launch">
-        <arg name="point_cloud_period"  value="8"/>
-        <!-- <arg name="pano_points_max_depth"  value="40.0"/> -->
-        <arg name="pano_points_max_depth"  value="100.0"/>
-      </include>
-    </group>
+      <arg name="verbosity" value="1"/>
+    </include>
+    <include file="$(find depth_atlas)/launch/mapper_base_station.launch">
+      <arg name="point_cloud_period"  value="8"/>
+      <!-- <arg name="pano_points_max_depth"  value="40.0"/> -->
+      <arg name="pano_points_max_depth"  value="100.0"/>
+    </include>
+  </group>
 
-    <!-- Launch Octomap server -->
+  <!-- Launch Octomap server -->
+  <group if="$(eval arg('loam'))">
     <node pkg="octomap_server" type="octomap_server_node" name="octomap_server" output="screen">
-        <param name="resolution" value="0.2" />
-        <param name="frame_id" value="map"/>
-        <param name="base_frame_id" value="base_link"/>
-        <param name="filter_ground" value="true" />
-        <param name="ground_filter/distance" value="0.5" />
-        <param name="ground_filter/angle" value="0.2" />
-        <param name="ground_filter/plane_distance" value="0.8" />
-        <param name="sensor_model/max_range" value="20.0" />
-        <!--param name="occupancy_min_z" value="-0.1" /-->
-        <remap from="cloud_in" to="os1_cloud_node/points/origin_filtered" />
-        <remap from="projected_map" to="map" />
+      <param name="resolution" value="0.2" />
+      <param name="frame_id" value="map"/>
+      <param name="base_frame_id" value="base_link"/>
+      <param name="filter_ground" value="true" />
+      <param name="ground_filter/distance" value="1.0" />
+      <param name="ground_filter/angle" value="0.2" />
+      <param name="ground_filter/plane_distance" value="1.0" />
+      <param name="sensor_model/max_range" value="20.0" />
+      <param name="pointcloud_max_z" value="2" />
+      <remap from="cloud_in" to="os1_cloud_node/points/origin_filtered" />
+      <remap from="projected_map" to="map" />
     </node>
+  </group>
 
-    <!-- Pointcloud filter nodelet -->
-    <node pkg="nodelet" type="nodelet" name="pcl_manager" args="manager" output="screen" />
+  <!-- Pointcloud filter nodelet -->
+  <node pkg="nodelet" type="nodelet" name="pcl_manager" args="manager" output="screen" />
 
-    <node pkg="nodelet" type="nodelet" name="passthrough" args="load pcl/PassThrough pcl_manager" output="screen">
-        <remap from="~input" to="os1_cloud_node/points" />
-        <rosparam>
-            filter_field_name: x
-            filter_limit_min: -0.001
-            filter_limit_max: 0.001
-            filter_limit_negative: True
-        </rosparam>
-        <remap from="~output" to="os1_cloud_node/points/origin_filtered" />
-    </node>
+  <node pkg="nodelet" type="nodelet" name="passthrough" args="load pcl/PassThrough pcl_manager" output="screen">
+    <remap from="~input" to="os1_cloud_node/points" />
+    <rosparam>
+      filter_field_name: x
+      filter_limit_min: -0.001
+      filter_limit_max: 0.001
+      filter_limit_negative: True
+    </rosparam>
+    <remap from="~output" to="os1_cloud_node/points/origin_filtered" />
+  </node>
 </launch>
