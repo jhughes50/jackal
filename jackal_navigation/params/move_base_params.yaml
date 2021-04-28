@@ -10,4 +10,4 @@ oscillation_timeout: 0.0
 oscillation_distance: 0.5
 
 recovery_behavior_enabled: true
-clearing_rotation_allowed: true
+recovery_behaviors: [{name: conservative_reset, type: clear_costmap_recovery/ClearCostmapRecovery}, {name: aggressive_reset, type: clear_costmap_recovery/ClearCostmapRecovery}]
