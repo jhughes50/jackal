@@ -2,11 +2,12 @@
 <launch>
   <arg name="upslam" default="False"/>
   <arg name="loam" default="False"/>
+  <arg name="output" default="screen"/>
 
   <!-- Launch the ROS navigation stack -->
-  <include file="$(find jackal_navigation)/launch/jackal_navigation.launch" />
+  <include file="$(find jackal_navigation)/launch/jackal_navigation.launch" pass_all_args="true"/>
 
-  <node pkg="tf2_ros" type="static_transform_publisher" name="link1_broadcaster" args="0 0 0 0 0 0 map odom" />
+  <node pkg="tf2_ros" type="static_transform_publisher" name="link1_broadcaster" args="0 0 0 3.14159 0 0 map odom" />
 
   <!-- Static transform between odom and robot/local_mapper frame and from local_pose to base_link frame to include Anthony's mapper -->
   <!--node pkg="tf2_ros" type="static_transform_publisher" name="odom_mapper_broadcaster" args="0 0 0 0 0 0 1 odom robot/map_local_mapper" />
@@ -14,7 +15,7 @@
 
   <!-- Launch LeGO-LOAM -->
   <group if="$(eval arg('loam'))">
-    <include file="$(find lego_loam)/launch/run.launch" >
+    <include file="$(find lego_loam)/launch/run.launch" pass_all_args="true">
       <arg name="use_sim_time" value="False" />
     </include>
   </group>
@@ -32,12 +33,12 @@
 
   <!--Launch Anthony's Mapper -->
   <group if="$(eval arg('upslam'))">
-    <include file="$(find depth_atlas)/launch/mapper.launch"/>
+    <include file="$(find depth_atlas)/launch/mapper.launch" pass_all_args="true"/>
   </group>
 
   <!-- Launch Octomap server -->
   <group if="$(eval arg('loam'))">
-    <node pkg="octomap_server" type="octomap_server_node" name="octomap_server" output="screen">
+    <node pkg="octomap_server" type="octomap_server_node" name="octomap_server" output="$(arg output)">
       <param name="resolution" value="0.2" />
       <param name="frame_id" value="map"/>
       <param name="base_frame_id" value="base_link"/>
@@ -53,9 +54,9 @@
   </group>
 
   <!-- Pointcloud filter nodelet -->
-  <node pkg="nodelet" type="nodelet" name="pcl_manager" args="manager" output="screen" />
+  <node pkg="nodelet" type="nodelet" name="pcl_manager" args="manager" output="$(arg output)" />
 
-  <node pkg="nodelet" type="nodelet" name="passthrough" args="load pcl/PassThrough pcl_manager" output="screen">
+  <node pkg="nodelet" type="nodelet" name="passthrough" args="load pcl/PassThrough pcl_manager" output="$(arg output)">
     <remap from="~input" to="os1_cloud_node/points" />
     <rosparam>
       filter_field_name: x
@@ -65,7 +66,7 @@
     </rosparam>
     <remap from="~output" to="os1_cloud_node/points/origin_filtered" />
   </node>
-  <node pkg="nodelet" type="nodelet" name="passthrough2" args="load pcl/PassThrough pcl_manager" output="screen">
+  <node pkg="nodelet" type="nodelet" name="passthrough2" args="load pcl/PassThrough pcl_manager" output="$(arg output)">
     <remap from="~input" to="os1_cloud_node/points/origin_filtered" />
     <rosparam>
       filter_field_name: z
