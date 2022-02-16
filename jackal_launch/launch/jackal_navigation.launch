@@ -6,8 +6,9 @@
     <arg name="odom_topic" default="ground_truth/odom" />
     <arg name="ns" default="/"/>
     <arg name="pointcloud_topic" default="os1_cloud_node/points/origin_filtered"/>
+    <arg name="output" default="screen"/>
 
-    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="$(arg output)">
         <rosparam file="$(find jackal_navigation)/params/costmap_common_params.yaml" command="load" ns="global_costmap"/>
         <rosparam file="$(find jackal_navigation)/params/costmap_common_params.yaml" command="load" ns="local_costmap"/>
         <rosparam file="$(find jackal_navigation)/params/odom_nav_params/local_costmap_params.yaml" command="load"/>
