@@ -22,7 +22,7 @@
   <!-- Connect upslam to robot tf tree -->
   <!-- If upslam isn't running, doesn't hurt -->
   <group if="$(eval not arg('loam'))">
-    <node pkg="tf2_ros" type="static_transform_publisher" name="connect_upslam_tf" args="0 0 0 3.14159 0 0 local_pose base_link" />
+    <node pkg="tf2_ros" type="static_transform_publisher" name="connect_upslam_tf" args="0 0 0 3.14159 0 0 global_pose base_link" />
   </group>
 
   <!-- Dummy transform for testing -->
