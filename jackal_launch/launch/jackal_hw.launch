@@ -27,9 +27,7 @@
   <node pkg="rosserial_python" type="message_info_service.py" name="rosserial_message_info" />
 
   <!-- Translate Sentence messages from the MCU to NavSatFix messages -->
-  <!--
   <node pkg="nmea_navsat_driver" type="nmea_topic_driver" name="nmea_topic_driver" ns="navsat" />
-  -->
 
   <!-- Filter raw gyro data into a usable IMU message -->
   <!--node pkg="imu_filter_madgwick" type="imu_filter_node" name="imu_filter">
