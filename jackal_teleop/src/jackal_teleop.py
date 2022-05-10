@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import rospy
 from sensor_msgs.msg import Joy
@@ -20,8 +20,8 @@ class JackalTeleop:
             self.twist_pub_.publish(self.twist_buf_)
 
     def joy_cb(self, msg):
-        self.twist_buf_.linear.x = msg.axes[3]*2
-        self.twist_buf_.angular.z = msg.axes[2]
+        self.twist_buf_.linear.x = msg.axes[3]*1.5
+        self.twist_buf_.angular.z = msg.axes[2]*0.5
         self.is_auto_ = msg.axes[4] > 0
 
     def twist_cb(self, msg):
