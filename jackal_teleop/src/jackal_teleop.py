@@ -20,7 +20,7 @@ class JackalTeleop:
             self.twist_pub_.publish(self.twist_buf_)
 
     def joy_cb(self, msg):
-        self.twist_buf_.linear.x = msg.axes[3]*1.5
+        self.twist_buf_.linear.x = msg.axes[3]*2
         self.twist_buf_.angular.z = msg.axes[2]*0.5
         self.is_auto_ = msg.axes[4] > 0
 

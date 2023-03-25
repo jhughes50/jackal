@@ -57,6 +57,8 @@
   </node>
   -->
 
+  <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
+
   <group if="$(arg ouster)">
     <!-- Ouster Launch -->
     <node pkg="tf2_ros" type="static_transform_publisher" name="ouster_tf_broadcaster" args="0 0 0 0 0 0 1 base_link ouster/os_sensor" />
