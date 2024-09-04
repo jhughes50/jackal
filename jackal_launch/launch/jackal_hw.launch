@@ -5,6 +5,7 @@
   <arg name="rgb" default="True"/>
   <arg name="ir" default="False"/>
   <arg name="event" default="True"/>
+  <arg name="calib_path" default="file://."/>
 
   <include file="$(find jackal_description)/launch/description.launch" />
 
@@ -76,7 +77,6 @@
 
   <group if="$(arg rgb)">
       <include file="$(find spinnaker_camera_driver)/launch/camera.launch">
-          <arg name="calib_path" value="file:///home/dtc/ws/src/camera.yaml"/>
           <arg name="frame_rate" value="20"/>
       </include>
   </group>
