@@ -27,7 +27,7 @@ class JackalTeleop:
         self.twist_buf_.linear.x = msg.axes[3]*2
         self.twist_buf_.angular.z = msg.axes[2]*0.5
         self.is_auto_ = msg.axes[4] > 0
-        self.trigger_ = msg.axes[5] > 0
+        self.trigger_ = msg.buttons[0] == 0
 
         # publish auto flag
         is_auto_msg = Bool()
