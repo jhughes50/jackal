@@ -10,6 +10,7 @@ class JackalTeleop:
         self.twist_buf_ = Twist()
         self.is_auto_ = False
         self.trigger_ = False
+        self.prev_trigger_ = True
 
         self.joy_sub_ = rospy.Subscriber('joy', Joy, self.joy_cb)
         self.twist_sub_ = rospy.Subscriber('twist_auto', Twist, self.twist_cb)
@@ -33,10 +34,12 @@ class JackalTeleop:
         is_auto_msg = Bool()
         is_auto_msg.data = self.is_auto_
         self.is_auto_pub_.publish(is_auto_msg)
-        
-        trigger_msg = Bool()
-        trigger_msg.data = self.trigger_
-        self.trigger_pub_.publish(trigger_msg)
+
+        if self.trigger_ != self.prev_trigger_:
+            trigger_msg = Bool()
+            trigger_msg.data = self.trigger_
+            self.trigger_pub_.publish(trigger_msg)
+        self.prev_trigger_ = trigger
 
     def twist_cb(self, msg):
         if self.is_auto_:
