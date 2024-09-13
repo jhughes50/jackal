@@ -39,7 +39,7 @@ class JackalTeleop:
             trigger_msg = Bool()
             trigger_msg.data = self.trigger_
             self.trigger_pub_.publish(trigger_msg)
-        self.prev_trigger_ = trigger
+        self.prev_trigger_ = self.trigger_
 
     def twist_cb(self, msg):
         if self.is_auto_:
