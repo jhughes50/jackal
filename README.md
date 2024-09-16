@@ -1,5 +1,7 @@
 jackal
 ======
 
-Common packages for Jackal, including messages and robot description. These are packages relevant
-to all Jackal workspaces, whether simulation, desktop, or on the robot's own headless PC.
+## Software
+ - `docker`/`docker-compose`
+ - nvidia drivers
+ - `jstest-gtk`: the controller needs to be calibrated on the robot!
