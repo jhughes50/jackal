@@ -13,6 +13,8 @@ class JackalTeleop:
         self.prev_trigger_ = True
         self.trigger_count_ = 0
 
+        self.num_views_ = 2
+
         self.joy_sub_ = rospy.Subscriber('joy', Joy, self.joy_cb)
         self.twist_sub_ = rospy.Subscriber('twist_auto', Twist, self.twist_cb)
         self.twist_pub_ = rospy.Publisher('twist_out', Twist, queue_size=1)
@@ -40,7 +42,11 @@ class JackalTeleop:
             trigger_msg = UInt8()
             trigger_msg.data = self.trigger_count_
             self.trigger_pub_.publish(trigger_msg)
-            self.trigger_count_ += 1
+            
+            if self.trigger_count_ == self.num_views_:
+                self.trigger_count_ = 0
+            else:
+                self.trigger_count_ += 1
         self.prev_trigger_ = self.trigger_
 
     def twist_cb(self, msg):
