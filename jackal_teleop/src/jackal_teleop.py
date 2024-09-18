@@ -3,7 +3,7 @@
 import rospy
 from sensor_msgs.msg import Joy
 from geometry_msgs.msg import Twist
-from std_msgs.msg import Bool
+from std_msgs.msg import UInt8
 
 class JackalTeleop:
     def __init__(self):
@@ -11,12 +11,13 @@ class JackalTeleop:
         self.is_auto_ = False
         self.trigger_ = False
         self.prev_trigger_ = True
+        self.trigger_count_ = 0
 
         self.joy_sub_ = rospy.Subscriber('joy', Joy, self.joy_cb)
         self.twist_sub_ = rospy.Subscriber('twist_auto', Twist, self.twist_cb)
         self.twist_pub_ = rospy.Publisher('twist_out', Twist, queue_size=1)
         self.is_auto_pub_ = rospy.Publisher('~is_auto', Bool, queue_size=1)
-        self.trigger_pub_ = rospy.Publisher('~trigger', Bool, queue_size=1)
+        self.trigger_pub_ = rospy.Publisher('~trigger', UInt8, queue_size=1)
 
         self.pub_timer_ = rospy.Timer(rospy.Duration(0.1), self.pub_cb)
 
@@ -36,9 +37,10 @@ class JackalTeleop:
         self.is_auto_pub_.publish(is_auto_msg)
 
         if self.trigger_ != self.prev_trigger_:
-            trigger_msg = Bool()
-            trigger_msg.data = self.trigger_
+            trigger_msg = UInt8()
+            trigger_msg.data = self.trigger_count_
             self.trigger_pub_.publish(trigger_msg)
+            self.trigger_count_ += 1
         self.prev_trigger_ = self.trigger_
 
     def twist_cb(self, msg):
