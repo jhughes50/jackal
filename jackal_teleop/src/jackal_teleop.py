@@ -31,14 +31,14 @@ class JackalTeleop:
         self.twist_buf_.linear.x = msg.axes[3]*2
         self.twist_buf_.angular.z = msg.axes[2]*0.5
         self.is_auto_ = msg.axes[4] > 0
-        self.trigger_ = msg.buttons[0] == 0
+        self.trigger_ = msg.buttons[0]
 
         # publish auto flag
         is_auto_msg = Bool()
         is_auto_msg.data = self.is_auto_
         self.is_auto_pub_.publish(is_auto_msg)
 
-        if self.trigger_ != self.prev_trigger_:
+        if self.trigger_ == 1:
             trigger_msg = UInt8()
             trigger_msg.data = self.trigger_count_
             self.trigger_pub_.publish(trigger_msg)
