@@ -38,7 +38,7 @@ class JackalTeleop:
         is_auto_msg.data = self.is_auto_
         self.is_auto_pub_.publish(is_auto_msg)
 
-        if self.trigger_ == 0:
+        if self.trigger_ == 0 and self.prev_trigger_ == 1:
             trigger_msg = UInt8()
             trigger_msg.data = self.trigger_count_
             self.trigger_pub_.publish(trigger_msg)
