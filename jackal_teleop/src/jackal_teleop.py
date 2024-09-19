@@ -3,7 +3,7 @@
 import rospy
 from sensor_msgs.msg import Joy
 from geometry_msgs.msg import Twist
-from std_msgs.msg import UInt8
+from std_msgs.msg import UInt8, Bool
 
 class JackalTeleop:
     def __init__(self):
