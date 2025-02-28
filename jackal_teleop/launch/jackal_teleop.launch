@@ -1,9 +1,12 @@
 <launch>
-    <node name="joy" pkg="joy" type="joy_node">
-        <param name="dev" value="/dev/input/js0"/>
-    </node>
+    <arg name="fcu_url" value="/dev/serial/by-id/usb-3D_Robotics_PX4_FMU_v5.x_0-if00"/>
 
+    <include find="$(find mavros/launch/px4.launch)">
+        <arg name="fcu_url" value="$(arg fcu_url)"/>
+    </include>
+    
     <node name="jackal_teleop" pkg="jackal_teleop" type="jackal_teleop.py">
         <remap from="twist_out" to="/jackal_velocity_controller/cmd_vel"/>
     </node>
+    <node name="jackal_rc_to_joy" pkg="jackal_teleop" type="rc_to_joy.py"/>
 </launch>
