@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import rospy
 from mavros_msgs.msg import RCIn
 from sensor_msgs.msg import Joy
@@ -12,8 +14,8 @@ def rc_callback(msg):
 
     # Map RC channels to joystick axes (adjust mapping as needed)
     joy_msg.axes = [
-        scale(msg.channels[0]),  # Roll
-        scale(msg.channels[1]),  # Pitch
+        round(scale(msg.channels[0]),2),  # Roll
+        round(scale(msg.channels[1]),2),  # Pitch
         scale(msg.channels[2]),  # Throttle
         scale(msg.channels[3]),  # Yaw
     ]
