@@ -21,6 +21,11 @@ class JackalTeleop:
         self.is_auto_pub_ = rospy.Publisher('~is_auto', Bool, queue_size=1)
         self.trigger_pub_ = rospy.Publisher('~trigger', UInt8, queue_size=1)
 
+        self.prev_linear_ = 0
+        self.prev_angular_ = 0
+        self.linear_diff_ = 0
+        self.angular_diff_ = 0
+ 
         self.pub_timer_ = rospy.Timer(rospy.Duration(0.1), self.pub_cb)
 
     def pub_cb(self, event):
@@ -28,10 +33,10 @@ class JackalTeleop:
             self.twist_pub_.publish(self.twist_buf_)
 
     def joy_cb(self, msg):
-        self.twist_buf_.linear.x = msg.axes[0]
+        self.twist_buf_.linear.x = msg.axes[0]*2
         self.twist_buf_.angular.z = msg.axes[1]*0.5
         self.is_auto_ = msg.buttons[1]
-        self.trigger_ = msg.buttons[0]
+        self.trigger_ = not(msg.buttons[0])
 
         # publish auto flag
         is_auto_msg = Bool()
@@ -56,6 +61,7 @@ class JackalTeleop:
     def twist_cb(self, msg):
         if self.is_auto_:
             self.twist_pub_.publish(msg)
+
 
 if __name__=='__main__':
     rospy.init_node('jackal_teleop')

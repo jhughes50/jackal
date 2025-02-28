@@ -14,8 +14,8 @@ def rc_callback(msg):
 
     # Map RC channels to joystick axes (adjust mapping as needed)
     joy_msg.axes = [
-        round(scale(msg.channels[0]),2),  # Roll
-        round(scale(msg.channels[1]),2),  # Pitch
+        scale(int((msg.channels[0]+10)/10) * 10),  # Roll
+        scale(int(msg.channels[1]/10) * 10),  # Pitch
         scale(msg.channels[2]),  # Throttle
         scale(msg.channels[3]),  # Yaw
     ]
