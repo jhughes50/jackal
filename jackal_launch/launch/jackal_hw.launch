@@ -71,6 +71,7 @@
 	<arg name="sensor_hostname" value="192.168.100.12"/>
 	<arg name="udp_dest" value="192.168.100.1"/>
 	<arg name="metadata" value="./ouster_meta.json"/>
+        <arg name="lidar_mode" value="1024x10"/>
     </include>
   </group>
 
